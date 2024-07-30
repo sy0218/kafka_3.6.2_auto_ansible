@@ -1,0 +1,4 @@
+kafka_tar_path: "/data/download_tar"
+kafka_tar_filename: "kafka_2.12-3.6.2.tgz"
+work_dir: "/data/sy0218"
+play_book_dir: "/data/work/kafka_3.6.2_auto_ansible"

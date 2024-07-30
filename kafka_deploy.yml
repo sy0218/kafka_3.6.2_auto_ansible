@@ -1,0 +1,61 @@
+---
+- name: Create Kafka_tar directory
+  hosts: servers
+  become: yes
+  vars_files:
+    - /data/work/kafka_3.6.2_auto_ansible/main.yml
+  tasks:
+    - name: Create Kafka_tar directory
+      file:
+        path: "{{ kafka_tar_path }}"
+        state: directory
+
+    - name: Create work directory
+      file:
+        path: "{{ work_dir }}"
+        state: directory
+
+
+- name: Copy Kafka_tar to servers
+  hosts: localhost
+  become: yes
+  vars_files:
+    - /data/work/kafka_3.6.2_auto_ansible/main.yml
+  tasks:
+    - name: tar_scp.sh Start
+      shell: "{{ play_book_dir }}/tar_scp.sh {{ play_book_dir }} {{ kafka_tar_path }}"
+
+
+- name: Extract Kafka_tar
+  hosts: servers
+  become: yes
+  vars_files:
+    - /data/work/kafka_3.6.2_auto_ansible/main.yml
+  tasks:
+    - name: Extract the Kafka tarball
+      unarchive:
+        src: "{{ kafka_tar_path }}/{{ kafka_tar_filename }}"
+        dest: "{{ work_dir }}"
+        remote_src: yes
+
+
+- name: Kafka link
+  hosts: servers
+  become: yes
+  vars_files:
+    - /data/work/kafka_3.6.2_auto_ansible/main.yml
+  tasks:
+    - name: Kafka link gogo
+      shell: "ln -s {{ work_dir }}/kafka*-?.?.? {{ work_dir }}/kafka"
+      args:
+        creates: "{{ work_dir }}/kafka" # 존재하지 않으면 생성
+
+
+- name: entrypoint_sh start
+  hosts: localhost
+  become: yes
+  vars_files:
+    - /data/work/kafka_3.6.2_auto_ansible/main.yml
+  tasks:
+    - name: entry_point_sh start
+      shell: "{{ play_book_dir }}/entrypoint.sh {{ play_book_dir }} {{ work_dir }}"
