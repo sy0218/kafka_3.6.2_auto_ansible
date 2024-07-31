@@ -62,6 +62,7 @@ EOF
 
 for ((i=0; i<len_ip_array; i++)); do
         current_ip=${ip_array[$i]}
+	# host명 치환
 	ssh ${current_ip} "sed -i 's/\\\$(hostname)/$(ssh ${current_ip} hostname)/g' ${system_file}"
 	# 브로커id 치환
 	ssh ${current_ip} "sed -i 's/\\\$(broker_num)/$((i+1))/g' ${system_file}"
