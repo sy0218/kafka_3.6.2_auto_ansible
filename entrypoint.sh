@@ -59,7 +59,6 @@ EOF
 
 
 
-
 for ((i=0; i<len_ip_array; i++)); do
         current_ip=${ip_array[$i]}
 	# host명 치환
